@@ -7,13 +7,16 @@
  * You can find these values in your Firebase Console → Project Settings → General → Your apps → Web app.
  */
 
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",               // Replace with your API key
-  authDomain: "YOUR_PROJECT.firebaseapp.com", // Replace with your auth domain
-  projectId: "YOUR_PROJECT_ID",               // Replace with your project ID
-  storageBucket: "YOUR_PROJECT.appspot.com",  // Replace with your storage bucket
-  messagingSenderId: "YOUR_SENDER_ID",        // Replace with your messaging sender ID
-  appId: "YOUR_APP_ID"                        // Replace with your app ID
+  apiKey: "AIzaSyAMD3cqwFI9MsQkNMni3ZXJoXaZfds3bT8",
+  authDomain: "ecbcg-pos.firebaseapp.com",
+  projectId: "ecbcg-pos",
+  storageBucket: "ecbcg-pos.firebasestorage.app",
+  messagingSenderId: "950396174988",
+  appId: "1:950396174988:web:2d8fe7ae236c52cd9331a9",
+  measurementId: "G-7JPXHCEHMW"
 };
 
 // Initialize Firebase
