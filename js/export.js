@@ -35,7 +35,7 @@ const Export = {
         return;
       }
 
-      const headers = ['Item Name', 'Price (₹)', 'Quantity', 'Contributor'];
+      const headers = ['Item Name', 'Price (LKR)', 'Quantity', 'Contributor'];
       const rows = data.map((item) => [
         item.name || '',
         (item.price || 0).toFixed(2),
@@ -134,10 +134,10 @@ const Export = {
         'Date',
         'Item Name',
         'Quantity',
-        'Price (₹)',
-        'Subtotal (₹)',
+        'Price (LKR)',
+        'Subtotal (LKR)',
         'Contributor',
-        'Sale Total (₹)',
+        'Sale Total (LKR)',
         'Processed By'
       ];
 
@@ -186,7 +186,7 @@ const Export = {
    * @param {string} filename - The download filename.
    */
   downloadCSV(csvString, filename) {
-    // Add BOM for Excel compatibility with Unicode characters (₹ symbol)
+    // Add BOM for Excel compatibility with Unicode characters
     const BOM = '\uFEFF';
     const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
