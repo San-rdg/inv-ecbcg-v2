@@ -20,8 +20,8 @@ const ASSETS_TO_CACHE = [
   '/js/register.js',
   '/js/export.js',
   '/assets/logo.png',
-  '/assets/icon-192.png',
-  '/assets/icon-512.png'
+  '/assets/icon-192.jpg',
+  '/assets/icon-512.jpg'
 ];
 
 // Install Event: Cache all static assets
