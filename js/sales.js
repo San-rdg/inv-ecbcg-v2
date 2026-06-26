@@ -447,15 +447,15 @@ const Sales = {
 
       sales.forEach(sale => {
         const time = sale.saleDate ? Utils.formatDateTime(sale.saleDate) : '—';
-        const itemsList = (sale.items || []).map(i => \`\${this._escapeHtml(i.itemName)} (x\${i.quantity})\`).join('<br>');
-        html += \`
+        const itemsList = (sale.items || []).map(i => `${this._escapeHtml(i.itemName)} (x${i.quantity})`).join('<br>');
+        html += `
           <tr>
-            <td style="white-space:nowrap;">\${time}</td>
-            <td>\${this._escapeHtml(sale.processedByName || '—')}</td>
-            <td>\${itemsList}</td>
-            <td style="text-align:right; font-weight:bold;">\${Utils.formatCurrency(sale.totalAmount || 0)}</td>
+            <td style="white-space:nowrap;">${time}</td>
+            <td>${this._escapeHtml(sale.processedByName || '—')}</td>
+            <td>${itemsList}</td>
+            <td style="text-align:right; font-weight:bold;">${Utils.formatCurrency(sale.totalAmount || 0)}</td>
           </tr>
-        \`;
+        `;
       });
 
       html += `
