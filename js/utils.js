@@ -64,22 +64,23 @@ const Utils = {
   // ─── Currency Formatting ───────────────────────────────────────────
 
   /**
-   * Format a number as INR currency string.
+   * Format a number as LKR currency string.
    * @param {number} amount
-   * @returns {string} e.g. "₹1,234.00"
+   * @returns {string} e.g. "LKR 1,234.00"
    */
   formatCurrency(amount) {
     try {
       const num = Number(amount) || 0;
-      return new Intl.NumberFormat('en-IN', {
+      // Using 'en-LK' and 'LKR' for Sri Lankan Rupee
+      return new Intl.NumberFormat('en-LK', {
         style: 'currency',
-        currency: 'INR',
+        currency: 'LKR',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }).format(num);
     } catch (err) {
       console.error('[Utils.formatCurrency] Error:', err);
-      return `₹${Number(amount || 0).toFixed(2)}`;
+      return `LKR ${Number(amount || 0).toFixed(2)}`;
     }
   },
 
