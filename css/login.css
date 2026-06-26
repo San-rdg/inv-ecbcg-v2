@@ -1,0 +1,206 @@
+/* ============================================================
+   LOGIN.CSS — Login Page Styles
+   Full-screen centered card with glassmorphism
+   ============================================================ */
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Animated orbs background ───────────────────────────────── */
+.login-page::before,
+.login-page::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  animation: floatOrb 12s ease-in-out infinite alternate;
+}
+.login-page::before {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0,212,170,0.12) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+}
+.login-page::after {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(91,141,239,0.10) 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -6s;
+}
+
+@keyframes floatOrb {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(30px, -20px) scale(1.05); }
+  100% { transform: translate(-10px, 15px) scale(0.98); }
+}
+
+/* ── Login container ────────────────────────────────────────── */
+.login-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  animation: fadeInUp 0.7s ease;
+}
+
+/* ── Brand section ──────────────────────────────────────────── */
+.login-brand {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.login-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  box-shadow: 0 8px 32px var(--color-primary-glow);
+  margin-bottom: var(--space-5);
+  position: relative;
+}
+.login-logo svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-inverse);
+}
+.login-logo::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-primary), transparent);
+  opacity: 0.3;
+  z-index: -1;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.login-brand h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-2);
+  background: linear-gradient(135deg, var(--color-text-primary) 30%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-brand p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* ── Login card ─────────────────────────────────────────────── */
+.login-card {
+  padding: var(--space-8);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-heavy));
+  -webkit-backdrop-filter: blur(var(--glass-blur-heavy));
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.login-card .form-group {
+  margin-bottom: var(--space-5);
+}
+
+.login-card .form-group:last-of-type {
+  margin-bottom: var(--space-6);
+}
+
+.login-card .form-label {
+  margin-bottom: var(--space-1);
+}
+
+.login-card .form-input {
+  padding: 0.8rem 1rem;
+}
+
+/* ── Login button ───────────────────────────────────────────── */
+.login-btn-wrapper {
+  margin-bottom: var(--space-5);
+}
+.login-btn-wrapper .btn {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-md);
+  letter-spacing: 0.02em;
+}
+
+/* ── Error message ──────────────────────────────────────────── */
+.login-error {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.7rem 1rem;
+  margin-bottom: var(--space-5);
+  background: var(--color-danger-subtle);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+  animation: fadeIn 0.3s ease;
+}
+.login-error.visible {
+  display: flex;
+}
+.login-error svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ── Guest link ─────────────────────────────────────────────── */
+.login-footer {
+  text-align: center;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+.login-footer p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.login-footer a {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  transition: color var(--transition-fast);
+}
+.login-footer a:hover {
+  color: var(--color-primary-light);
+  text-decoration: underline;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .login-card {
+    padding: var(--space-6);
+  }
+  .login-brand h1 {
+    font-size: var(--font-size-xl);
+  }
+  .login-page::before {
+    width: 300px;
+    height: 300px;
+  }
+  .login-page::after {
+    width: 250px;
+    height: 250px;
+  }
+}
