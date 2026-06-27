@@ -114,6 +114,54 @@ const Sales = {
       const revenue = this.todaySales.reduce((sum, sale) => sum + (sale.totalAmount || 0), 0);
       todayRevenueEl.textContent = Utils.formatCurrency(revenue);
     }
+    
+    this.updateLeaderboard();
+  },
+
+  // ─── Creator Leaderboard ──────────────────────────────────────────
+
+  updateLeaderboard() {
+    const leaderboardEl = document.getElementById('creator-leaderboard');
+    if (!leaderboardEl) return;
+
+    // Aggregate sales by contributor
+    const stats = {};
+    this.todaySales.forEach(sale => {
+      (sale.items || []).forEach(item => {
+        if (!item.contributorId) return;
+        if (!stats[item.contributorId]) {
+          stats[item.contributorId] = {
+            name: item.contributorName || 'Unknown',
+            revenue: 0,
+            itemsSold: 0
+          };
+        }
+        stats[item.contributorId].revenue += (item.priceAtSale * item.quantity);
+        stats[item.contributorId].itemsSold += item.quantity;
+      });
+    });
+
+    const sortedCreators = Object.values(stats).sort((a, b) => b.revenue - a.revenue);
+
+    if (sortedCreators.length === 0) {
+      leaderboardEl.innerHTML = '<p style="color: var(--color-text-disabled); font-size: 14px;">No sales today yet.</p>';
+      return;
+    }
+
+    leaderboardEl.innerHTML = sortedCreators.slice(0, 5).map((creator, index) => {
+      const colors = ['#f59e0b', '#94a3b8', '#b45309', '#3b82f6', '#8b5cf6'];
+      const color = colors[index] || '#6b7280';
+      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+      
+      return `
+        <div style="background: var(--color-surface-hover); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 16px; min-width: 160px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+          <div style="font-size: 12px; font-weight: 700; color: ${color};">${medal}</div>
+          <div style="font-weight: 600; font-size: 15px; color: var(--color-text);">${this._escapeHtml(creator.name)}</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--color-success);">${Utils.formatCurrency(creator.revenue)}</div>
+          <div style="font-size: 12px; color: var(--color-text-secondary);">${creator.itemsSold} items sold</div>
+        </div>
+      `;
+    }).join('');
   },
 
   // ─── Register Stats ───────────────────────────────────────────────
