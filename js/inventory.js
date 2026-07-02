@@ -104,7 +104,8 @@ const Inventory = {
       .map(
         (item) => `
         <div class="catalog-card ${item.quantity <= 0 ? 'out-of-stock' : ''}" 
-             ${item.quantity > 0 ? `onclick="POS.addToCart('${item.id}')"` : ''}>
+             ${item.quantity > 0 ? `onclick="POS.addToCart('${item.id}')"` : ''}
+             style="${item.quantity <= 0 ? 'opacity:0.5;cursor:not-allowed;' : 'cursor:pointer;'}">
           <h3 class="catalog-card-title">${this._escapeHtml(item.name)}</h3>
           <p class="catalog-card-price">${Utils.formatCurrency(item.price)}</p>
           <p class="catalog-card-stock ${item.quantity <= 0 ? 'out-of-stock' : ''}">
