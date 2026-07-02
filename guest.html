@@ -103,28 +103,28 @@
   
   <!-- Guest Logic inline or separate if needed -->
   <script>
-    // Minimal logic to fetch and display catalog for guest
+    // Minimal logic to fetch and display catalog for guest if not fully implemented
     document.addEventListener('DOMContentLoaded', () => {
       const grid = document.getElementById('guest-catalog-grid');
       if(window.db) {
         window.db.collection('inventory').where('quantity', '>', 0).onSnapshot(snap => {
           if (snap.empty) {
-            grid.innerHTML = '<div class="empty-state"><h4>No items available</h4><p>Check back later for available items.</p></div>';
+            grid.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280;">No items available right now.</div>';
             return;
           }
-          grid.innerHTML = snap.docs.map(doc => {
+          grid.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">' + snap.docs.map(doc => {
             const item = doc.data();
             return `
-              <div class="guest-product-card">
-                <div class="product-name">${item.name || 'Unknown'}</div>
-                <div class="product-contributor">${item.contributorName || 'Unassigned'}</div>
-                <div class="product-footer">
-                  <span class="product-price">${Utils.formatCurrency(item.price)}</span>
-                  <span class="product-stock in-stock">${item.quantity} in stock</span>
+              <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #f3f4f6;">
+                <div style="font-weight:600;font-size:16px;margin-bottom:8px;">${item.name || 'Unknown'}</div>
+                <div style="font-size:13px;color:#6b7280;margin-bottom:12px;">${item.contributorName || 'Unassigned'}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-weight:700;color:#111827;">${Utils.formatCurrency(item.price)}</span>
+                  <span style="font-size:12px;background:#f0fdf4;color:#166534;padding:4px 8px;border-radius:999px;font-weight:600;">${item.quantity} in stock</span>
                 </div>
               </div>
             `;
-          }).join('');
+          }).join('') + '</div>';
         });
       }
     });
