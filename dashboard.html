@@ -250,11 +250,11 @@
               </div>
 
               <div class="cart-summary">
-                <div class="cart-summary-row">
+                <div style="display:flex;justify-content:space-between;color:#6b7280;margin-bottom:8px;">
                   <span>Subtotal</span>
                   <span id="cart-subtotal">LKR 0</span>
                 </div>
-                <div class="cart-summary-row total">
+                <div style="display:flex;justify-content:space-between;font-weight:700;font-size:18px;color:#111827;margin-bottom:16px;">
                   <span>Total</span>
                   <span id="cart-total">LKR 0</span>
                 </div>
@@ -356,15 +356,15 @@
           </div>
 
           <!-- Creator Leaderboard -->
-          <div class="leaderboard-widget glass-card">
-            <h4 class="leaderboard-title">
+          <div class="leaderboard-widget glass-card" style="margin-bottom: 24px; padding: 20px;">
+            <h4 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: var(--color-primary);">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
               </svg>
               Creator Leaderboard (Today)
             </h4>
-            <div id="creator-leaderboard" class="leaderboard-list">
-               <p class="leaderboard-empty">No sales today yet.</p>
+            <div id="creator-leaderboard" style="display: flex; gap: 16px; flex-wrap: wrap;">
+               <p style="color: var(--color-text-disabled); font-size: 14px;">No sales today yet.</p>
             </div>
           </div>
 
@@ -693,51 +693,6 @@
 
 
   <!-- ═══════════════════════════════════════════════════════════
-       MOBILE BOTTOM NAVIGATION
-       ═══════════════════════════════════════════════════════════ -->
-  <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
-    <a href="#" class="mobile-nav-item active" data-tab="tab-pos">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-        <line x1="8" y1="21" x2="16" y2="21"/>
-        <line x1="12" y1="17" x2="12" y2="21"/>
-      </svg>
-      <span>POS</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-tab="tab-inventory">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-        <line x1="12" y1="22.08" x2="12" y2="12"/>
-      </svg>
-      <span>Inventory</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-tab="tab-contributors">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-        <path d="M16 3.13a4 4 0 010 7.75"/>
-      </svg>
-      <span>People</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-tab="tab-sales">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23"/>
-        <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
-      </svg>
-      <span>Sales</span>
-    </a>
-    <a href="#" class="mobile-nav-item" data-tab="tab-register">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-        <line x1="1" y1="10" x2="23" y2="10"/>
-      </svg>
-      <span>Register</span>
-    </a>
-  </nav>
-
-  <!-- ═══════════════════════════════════════════════════════════
        TOAST CONTAINER
        ═══════════════════════════════════════════════════════════ -->
   <div class="toast-container"></div>
@@ -762,7 +717,7 @@
   <script src="js/register.js"></script>
   <script src="js/export.js"></script>
 
-  <!-- Inline: Sidebar toggle & tab switching & mobile bottom nav -->
+  <!-- Inline: Sidebar toggle & tab switching -->
   <script>
     // ── Sidebar mobile toggle ──
     (() => {
@@ -782,51 +737,26 @@
       if (hamburger) hamburger.addEventListener('click', openSidebar);
       if (overlay) overlay.addEventListener('click', closeSidebar);
 
-      // ── Unified Tab Switching ──
-      const sidebarLinks = document.querySelectorAll('.sidebar-link[data-tab]');
-      const mobileNavItems = document.querySelectorAll('.mobile-nav-item[data-tab]');
+      // ── Tab switching ──
+      const tabLinks = document.querySelectorAll('.sidebar-link[data-tab]');
       const tabPanels = document.querySelectorAll('.tab-content');
 
-      function switchTab(targetId) {
-        // Deactivate all
-        sidebarLinks.forEach(l => l.classList.remove('active'));
-        mobileNavItems.forEach(m => m.classList.remove('active'));
-        tabPanels.forEach(p => p.classList.remove('active'));
-
-        // Activate sidebar link
-        sidebarLinks.forEach(l => {
-          if (l.getAttribute('data-tab') === targetId) l.classList.add('active');
-        });
-
-        // Activate mobile nav item
-        mobileNavItems.forEach(m => {
-          if (m.getAttribute('data-tab') === targetId) m.classList.add('active');
-        });
-
-        // Activate panel
-        const panel = document.getElementById(targetId);
-        if (panel) panel.classList.add('active');
-
-        // Close sidebar on mobile
-        closeSidebar();
-
-        // Scroll to top on tab switch
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      // Sidebar links
-      sidebarLinks.forEach(link => {
+      tabLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          switchTab(link.getAttribute('data-tab'));
-        });
-      });
+          const targetId = link.getAttribute('data-tab');
 
-      // Mobile bottom nav
-      mobileNavItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-          e.preventDefault();
-          switchTab(item.getAttribute('data-tab'));
+          // Deactivate all
+          tabLinks.forEach(l => l.classList.remove('active'));
+          tabPanels.forEach(p => p.classList.remove('active'));
+
+          // Activate target
+          link.classList.add('active');
+          const panel = document.getElementById(targetId);
+          if (panel) panel.classList.add('active');
+
+          // Close sidebar on mobile
+          closeSidebar();
         });
       });
 
