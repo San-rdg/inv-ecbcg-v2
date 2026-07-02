@@ -156,29 +156,29 @@ const POS = {
 
     if (this.cart.length === 0) {
       cartItemsEl.innerHTML =
-        '<div class="cart-empty">' +
+        '<div style="text-align:center;padding:30px;color:#6b7280;">' +
         '<p>Your cart is empty.</p>' +
-        '<p class="cart-empty-hint">Click items in the catalog to add them.</p></div>';
+        '<p style="font-size:13px;">Click items in the catalog to add them.</p></div>';
       return;
     }
 
     cartItemsEl.innerHTML = this.cart
       .map(
         (item, index) => `
-        <div class="cart-item">
-          <div class="cart-item-info">
-            <div class="cart-item-name">${this._escapeHtml(item.itemName)}</div>
-            <div class="cart-item-price">${Utils.formatCurrency(item.price)} each</div>
+        <div class="cart-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e5e7eb;">
+          <div style="flex:1;">
+            <div style="font-weight:600;">${this._escapeHtml(item.itemName)}</div>
+            <div style="font-size:13px;color:#6b7280;">${Utils.formatCurrency(item.price)} each</div>
           </div>
-          <div class="cart-item-qty">
-            <button class="btn btn-sm" onclick="POS.updateQuantity(${index}, ${item.quantity - 1})">−</button>
-            <span>${item.quantity}</span>
-            <button class="btn btn-sm" onclick="POS.updateQuantity(${index}, ${item.quantity + 1})">+</button>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button class="btn btn-sm" onclick="POS.updateQuantity(${index}, ${item.quantity - 1})" style="min-width:28px;">−</button>
+            <span style="min-width:24px;text-align:center;font-weight:600;">${item.quantity}</span>
+            <button class="btn btn-sm" onclick="POS.updateQuantity(${index}, ${item.quantity + 1})" style="min-width:28px;">+</button>
           </div>
-          <div class="cart-item-total">
+          <div style="min-width:80px;text-align:right;font-weight:600;">
             ${Utils.formatCurrency(item.price * item.quantity)}
           </div>
-          <button class="cart-item-remove" onclick="POS.removeFromCart(${index})" title="Remove">✕</button>
+          <button class="btn btn-sm btn-delete" onclick="POS.removeFromCart(${index})" style="margin-left:8px;" title="Remove">✕</button>
         </div>`
       )
       .join('');
@@ -211,18 +211,23 @@ const POS = {
 
       if (summaryEl) {
         summaryEl.innerHTML =
-          '<div class="checkout-lines">' +
+          '<table style="width:100%;border-collapse:collapse;">' +
+          '<thead><tr style="border-bottom:2px solid #e5e7eb;">' +
+          '<th style="text-align:left;padding:6px;">Item</th>' +
+          '<th style="text-align:center;padding:6px;">Qty</th>' +
+          '<th style="text-align:right;padding:6px;">Subtotal</th>' +
+          '</tr></thead><tbody>' +
           this.cart
             .map(
               (item) => `
-              <div class="checkout-line">
-                <span class="line-name">${this._escapeHtml(item.itemName)}</span>
-                <span class="line-qty">×${item.quantity}</span>
-                <span class="line-total">${Utils.formatCurrency(item.price * item.quantity)}</span>
-              </div>`
+              <tr style="border-bottom:1px solid #f3f4f6;">
+                <td style="padding:6px;">${this._escapeHtml(item.itemName)}</td>
+                <td style="text-align:center;padding:6px;">${item.quantity}</td>
+                <td style="text-align:right;padding:6px;">${Utils.formatCurrency(item.price * item.quantity)}</td>
+              </tr>`
             )
             .join('') +
-          '</div>';
+          '</tbody></table>';
       }
 
       if (totalEl) totalEl.textContent = Utils.formatCurrency(this.calculateTotal());
