@@ -29,6 +29,8 @@ body {
   background-color: var(--color-bg-deep);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* ── Links ──────────────────────────────────────────────────── */
