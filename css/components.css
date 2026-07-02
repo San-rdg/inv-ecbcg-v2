@@ -567,126 +567,26 @@ textarea.form-input {
     gap: var(--space-3);
   }
   .stat-card {
-    padding: var(--space-3);
-  }
-  .stat-card .stat-icon {
-    width: 36px;
-    height: 36px;
-    margin-bottom: var(--space-2);
-  }
-  .stat-card .stat-icon svg {
-    width: 18px;
-    height: 18px;
+    padding: var(--space-4);
   }
   .stat-value {
-    font-size: var(--font-size-lg);
-  }
-  .stat-label {
-    font-size: 10px;
+    font-size: var(--font-size-xl);
   }
   .modal-content {
     width: 95%;
-    max-width: none;
-    margin: var(--space-3);
-    border-radius: var(--radius-lg);
-    max-height: 85vh;
-  }
-  .modal-header {
-    padding: var(--space-4);
-  }
-  .modal-header h3 {
-    font-size: var(--font-size-base);
-  }
-  .modal-body {
-    padding: var(--space-4);
-    gap: var(--space-4);
-  }
-  .modal-footer {
-    padding: var(--space-3) var(--space-4);
-    flex-direction: column;
-  }
-  .modal-footer .btn {
-    width: 100%;
-    justify-content: center;
+    margin: var(--space-4);
   }
   .toast-container {
-    top: var(--space-3);
-    right: var(--space-3);
-    left: var(--space-3);
+    top: var(--space-4);
+    right: var(--space-4);
+    left: var(--space-4);
   }
   .toast {
     min-width: auto;
     width: 100%;
-    font-size: var(--font-size-xs);
-    padding: 0.65rem 1rem;
   }
   .section-header {
     flex-direction: column;
     align-items: flex-start;
-  }
-  .empty-state {
-    padding: var(--space-8) var(--space-4);
-  }
-  .empty-state .empty-icon {
-    width: 56px;
-    height: 56px;
-    margin-bottom: var(--space-4);
-  }
-  .empty-state h4 {
-    font-size: var(--font-size-base);
-  }
-  .empty-state p {
-    font-size: var(--font-size-xs);
-  }
-
-  /* Form inputs — larger touch targets */
-  .form-input {
-    padding: 0.8rem 1rem;
-    font-size: var(--font-size-base);
-  }
-  .form-label {
-    font-size: var(--font-size-xs);
-  }
-
-  /* Buttons — adequate touch targets */
-  .btn {
-    padding: 0.6rem 1.1rem;
-    font-size: var(--font-size-sm);
-  }
-  .btn-sm {
-    padding: 0.4rem 0.7rem;
-    font-size: 11px;
-  }
-
-  /* Search bar */
-  .search-bar {
-    max-width: 100%;
-  }
-  .search-bar input {
-    font-size: var(--font-size-base);
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
-  }
-
-  /* Badge */
-  .badge {
-    font-size: 10px;
-    padding: 0.15rem 0.45rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-2);
-  }
-  .stat-card {
-    padding: var(--space-2);
-  }
-  .stat-value {
-    font-size: var(--font-size-base);
-  }
-  .modal-content {
-    width: 98%;
-    margin: var(--space-2);
   }
 }
