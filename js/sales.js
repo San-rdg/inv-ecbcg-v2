@@ -83,7 +83,10 @@ const Sales = {
             <td>${Utils.formatCurrency(sale.totalAmount)}</td>
             <td>${this._escapeHtml(sale.processedByName || '—')}</td>
             <td>
-              <button class="btn btn-sm btn-delete" onclick="Sales.deleteTodaySale('${sale.id}')" title="Delete Sale">✕</button>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sm" onclick="Sales.printTodaySaleReceipt('${sale.id}')" title="Print Receipts">Print</button>
+                <button class="btn btn-sm btn-delete" onclick="Sales.deleteTodaySale('${sale.id}')" title="Delete Sale">✕</button>
+              </div>
             </td>
           </tr>`;
       })
@@ -254,7 +257,10 @@ const Sales = {
                 <td style="text-align:right;">${Utils.formatCurrency(sale.totalAmount || 0)}</td>
                 <td>${this._escapeHtml(sale.processedByName || '—')}</td>
                 <td>
-                  <button class="btn btn-sm btn-delete" onclick="Sales.deletePastSale('${sale.saleId || ''}', '${day.id}')" title="Delete Sale">✕</button>
+                  <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-sm" onclick="Sales.printPastSaleReceipt('${day.id}', '${sale.saleId || ''}')" title="Print Receipts">Print</button>
+                    <button class="btn btn-sm btn-delete" onclick="Sales.deletePastSale('${sale.saleId || ''}', '${day.id}')" title="Delete Sale">✕</button>
+                  </div>
                 </td>
               </tr>`;
           })
@@ -528,6 +534,124 @@ const Sales = {
       console.error('[Sales.printPastSale] Error:', err);
       Utils.showToast('Failed to generate print document.', 'error');
     }
+  },
+
+  async printPastSaleReceipt(dateStr, saleId) {
+    if (!saleId) {
+      Utils.showToast('Cannot print receipt for this older sale format.', 'warning');
+      return;
+    }
+    try {
+      const docSnap = await window.db.collection('pastSales').doc(dateStr).get();
+      if (!docSnap.exists) return;
+      const data = docSnap.data();
+      const sale = (data.sales || []).find(s => s.saleId === saleId);
+      if (sale) {
+        this.printIndividualReceipts(sale);
+      } else {
+        Utils.showToast('Sale not found.', 'error');
+      }
+    } catch (err) {
+      console.error('[Sales.printPastSaleReceipt] Error:', err);
+      Utils.showToast('Failed to print receipt.', 'error');
+    }
+  },
+
+  printTodaySaleReceipt(saleId) {
+    const sale = this.todaySales.find((s) => s.id === saleId);
+    if (sale) {
+      this.printIndividualReceipts(sale);
+    } else {
+      Utils.showToast('Sale not found.', 'error');
+    }
+  },
+
+  printIndividualReceipts(sale) {
+    const itemsByContributor = {};
+    (sale.items || []).forEach(item => {
+      const cid = item.contributorId || 'unknown';
+      if (!itemsByContributor[cid]) {
+        itemsByContributor[cid] = {
+          name: item.contributorName || 'Unknown',
+          items: [],
+          total: 0
+        };
+      }
+      itemsByContributor[cid].items.push(item);
+      itemsByContributor[cid].total += ((item.priceAtSale || 0) * (item.quantity || 0));
+    });
+
+    let html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Seller Receipts</title>
+        <style>
+          body { font-family: 'Inter', sans-serif, Arial; color: #111827; }
+          .receipt { width: 300px; margin: 0 auto 40px auto; padding: 20px; border: 1px dashed #ccc; page-break-after: always; }
+          .receipt:last-child { page-break-after: auto; }
+          h2, h3 { text-align: center; margin: 5px 0; }
+          .divider { border-bottom: 1px dashed #000; margin: 10px 0; }
+          .item-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+          .total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; margin-top: 10px; }
+          .center { text-align: center; font-size: 12px; margin-top: 20px; }
+          @media print {
+            body { margin: 0; }
+            .receipt { border: none; margin: 0; padding: 0; }
+            button { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div style="text-align: center; margin-bottom: 20px;">
+          <button onclick="window.print()" style="padding:10px 20px;cursor:pointer;background:#6366f1;color:white;border:none;border-radius:6px;">Print Receipts</button>
+        </div>
+    `;
+
+    const time = sale.saleDate ? Utils.formatDateTime(sale.saleDate) : Utils.formatDateTime(new Date());
+
+    Object.values(itemsByContributor).forEach(contrib => {
+      html += `
+        <div class="receipt">
+          <h2>Society POS</h2>
+          <h3>Seller Receipt</h3>
+          <div class="center" style="margin-top:5px; margin-bottom: 10px;">
+            <div>Seller: <strong>${this._escapeHtml(contrib.name)}</strong></div>
+            <div>Time: ${time}</div>
+          </div>
+          <div class="divider"></div>
+      `;
+      contrib.items.forEach(item => {
+        html += `
+          <div class="item-row">
+            <span>${this._escapeHtml(item.itemName)} (x${item.quantity})</span>
+            <span>${Utils.formatCurrency(item.priceAtSale * item.quantity)}</span>
+          </div>
+        `;
+      });
+      html += `
+          <div class="divider"></div>
+          <div class="total-row">
+            <span>Total</span>
+            <span>${Utils.formatCurrency(contrib.total)}</span>
+          </div>
+          <div class="center">Thank you!</div>
+        </div>
+      `;
+    });
+
+    html += `
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `;
+
+    const printWin = window.open('', '_blank');
+    printWin.document.open();
+    printWin.document.write(html);
+    printWin.document.close();
   },
 
   // ─── Helpers ──────────────────────────────────────────────────────
