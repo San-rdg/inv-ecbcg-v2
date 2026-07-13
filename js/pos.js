@@ -133,20 +133,22 @@ const POS = {
   // ─── Render Cart ──────────────────────────────────────────────────
 
   renderCart() {
-    const cartItemsEl = document.getElementById('cart-items');
-    const cartCountEl = document.getElementById('cart-count');
+    const cartItemsEl   = document.getElementById('cart-items');
+    const cartCountEl   = document.getElementById('cart-count');
+    const fabCartCount  = document.getElementById('fab-cart-count');
     const cartSubtotalEl = document.getElementById('cart-subtotal');
-    const cartTotalEl = document.getElementById('cart-total');
-    const checkoutBtn = document.getElementById('checkout-btn');
+    const cartTotalEl   = document.getElementById('cart-total');
+    const checkoutBtn   = document.getElementById('checkout-btn');
 
-    // Cart count badge
+    // Cart count badge (header + FAB)
     const totalItems = this.cart.reduce((sum, c) => sum + c.quantity, 0);
-    if (cartCountEl) cartCountEl.textContent = totalItems;
+    if (cartCountEl)  cartCountEl.textContent  = totalItems;
+    if (fabCartCount) fabCartCount.textContent = totalItems;
 
     // Total
     const total = this.calculateTotal();
     if (cartSubtotalEl) cartSubtotalEl.textContent = Utils.formatCurrency(total);
-    if (cartTotalEl) cartTotalEl.textContent = Utils.formatCurrency(total);
+    if (cartTotalEl)    cartTotalEl.textContent    = Utils.formatCurrency(total);
 
     // Enable/disable checkout
     if (checkoutBtn) checkoutBtn.disabled = this.cart.length === 0;
@@ -155,30 +157,36 @@ const POS = {
     if (!cartItemsEl) return;
 
     if (this.cart.length === 0) {
-      cartItemsEl.innerHTML =
-        '<div style="text-align:center;padding:30px;color:#6b7280;">' +
-        '<p>Your cart is empty.</p>' +
-        '<p style="font-size:13px;">Click items in the catalog to add them.</p></div>';
+      cartItemsEl.innerHTML = `
+        <div class="cart-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+          </svg>
+          <p>Your cart is empty</p>
+        </div>`;
       return;
     }
 
     cartItemsEl.innerHTML = this.cart
       .map(
         (item, index) => `
-        <div class="cart-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e5e7eb;">
-          <div style="flex:1;">
-            <div style="font-weight:600;">${this._escapeHtml(item.itemName)}</div>
-            <div style="font-size:13px;color:#6b7280;">${Utils.formatCurrency(item.price)} each</div>
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${this._escapeHtml(item.itemName)}</div>
+            <div class="cart-item-price">${Utils.formatCurrency(item.price)} each</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <button class="btn btn-sm" onclick="POS.updateQuantity(${index}, ${item.quantity - 1})" style="min-width:28px;">−</button>
-            <span style="min-width:24px;text-align:center;font-weight:600;">${item.quantity}</span>
-            <button class="btn btn-sm" onclick="POS.updateQuantity(${index}, ${item.quantity + 1})" style="min-width:28px;">+</button>
+          <div class="cart-item-qty">
+            <button onclick="POS.updateQuantity(${index}, ${item.quantity - 1})" aria-label="Decrease quantity">−</button>
+            <span>${item.quantity}</span>
+            <button onclick="POS.updateQuantity(${index}, ${item.quantity + 1})" aria-label="Increase quantity">+</button>
           </div>
-          <div style="min-width:80px;text-align:right;font-weight:600;">
-            ${Utils.formatCurrency(item.price * item.quantity)}
-          </div>
-          <button class="btn btn-sm btn-delete" onclick="POS.removeFromCart(${index})" style="margin-left:8px;" title="Remove">✕</button>
+          <div class="cart-item-total">${Utils.formatCurrency(item.price * item.quantity)}</div>
+          <button class="cart-item-remove" onclick="POS.removeFromCart(${index})" title="Remove" aria-label="Remove ${this._escapeHtml(item.itemName)}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>`
       )
       .join('');
