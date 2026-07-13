@@ -562,6 +562,7 @@ textarea.form-input {
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+  /* Stat cards — 2-col grid */
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-3);
@@ -572,21 +573,95 @@ textarea.form-input {
   .stat-value {
     font-size: var(--font-size-xl);
   }
+
+  /* Modals — normal centered on tablet */
   .modal-content {
     width: 95%;
     margin: var(--space-4);
   }
+
+  /* Toast — full width on mobile */
   .toast-container {
-    top: var(--space-4);
-    right: var(--space-4);
-    left: var(--space-4);
+    top: var(--space-3);
+    right: var(--space-3);
+    left: var(--space-3);
   }
   .toast {
     min-width: auto;
     width: 100%;
+    font-size: var(--font-size-xs);
+    padding: 0.75rem 1rem;
   }
+
+  /* Section header — vertical on mobile */
   .section-header {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  /* Buttons — ensure adequate touch targets */
+  .btn {
+    min-height: 44px;
+  }
+  .btn-sm {
+    min-height: 36px;
+  }
+
+  /* Form inputs — larger on mobile for usability */
+  .form-input {
+    padding: 0.85rem 1rem;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+  select.form-input {
+    font-size: 16px;
+  }
+  textarea.form-input {
+    font-size: 16px;
+    min-height: 100px;
+  }
+
+  /* Search bar — prevent iOS zoom */
+  .search-bar input {
+    font-size: 16px;
+  }
 }
+
+@media (max-width: 480px) {
+  /* Stats — still 2 col for most phones */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+  .stat-card {
+    padding: var(--space-3);
+  }
+  .stat-value {
+    font-size: var(--font-size-lg);
+  }
+  .stat-label {
+    font-size: 10px;
+  }
+  .stat-card .stat-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: var(--space-2);
+  }
+  .stat-card .stat-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Empty state — compact on small screens */
+  .empty-state {
+    padding: var(--space-8) var(--space-4);
+  }
+  .empty-state .empty-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--space-4);
+  }
+  .empty-state h4 {
+    font-size: var(--font-size-base);
+  }
+}
+
