@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Society POS — Dashboard</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0a0e1a">
@@ -529,6 +529,61 @@
     </div><!-- /.main-content -->
   </div><!-- /.dashboard-shell -->
 
+  <!-- ═══════════════════════════════════════════════════════════
+       MOBILE BOTTOM NAVIGATION
+       ═══════════════════════════════════════════════════════════ -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile navigation">
+    <a href="#" class="mobile-nav-item active" data-tab="tab-pos" id="mob-nav-pos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <span>POS</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-tab="tab-inventory" id="mob-nav-inventory">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+      <span>Inventory</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-tab="tab-contributors" id="mob-nav-contributors">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+        <path d="M16 3.13a4 4 0 010 7.75"/>
+      </svg>
+      <span>Team</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-tab="tab-sales" id="mob-nav-sales">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/>
+        <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+      </svg>
+      <span>Sales</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-tab="tab-register" id="mob-nav-register">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+        <line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+      <span>Register</span>
+    </a>
+  </nav>
+
+  <!-- Floating cart button (mobile POS only) -->
+  <button class="fab-cart" id="fab-cart-btn" aria-label="View cart">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"/>
+      <circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+    </svg>
+    <span class="fab-cart-count" id="fab-cart-count">0</span>
+  </button>
+
 
   <!-- ═══════════════════════════════════════════════════════════
        MODALS
@@ -728,42 +783,91 @@
       function openSidebar() {
         sidebar.classList.add('open');
         overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
       }
       function closeSidebar() {
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
+        document.body.style.overflow = '';
       }
 
       if (hamburger) hamburger.addEventListener('click', openSidebar);
       if (overlay) overlay.addEventListener('click', closeSidebar);
 
-      // ── Tab switching ──
-      const tabLinks = document.querySelectorAll('.sidebar-link[data-tab]');
-      const tabPanels = document.querySelectorAll('.tab-content');
+      // ── Unified tab switching (sidebar + mobile bottom nav) ──
+      const sidebarLinks  = document.querySelectorAll('.sidebar-link[data-tab]');
+      const mobileNavItems = document.querySelectorAll('.mobile-nav-item[data-tab]');
+      const tabPanels     = document.querySelectorAll('.tab-content');
+      const headerTitle   = document.querySelector('.header-left h3');
 
-      tabLinks.forEach(link => {
+      const tabTitles = {
+        'tab-pos': 'Point of Sale',
+        'tab-inventory': 'Inventory',
+        'tab-contributors': 'Contributors',
+        'tab-sales': 'Sales History',
+        'tab-register': 'Register'
+      };
+
+      function switchTab(targetId) {
+        // Deactivate all
+        sidebarLinks.forEach(l => l.classList.remove('active'));
+        mobileNavItems.forEach(l => l.classList.remove('active'));
+        tabPanels.forEach(p => p.classList.remove('active'));
+
+        // Activate matching sidebar link
+        sidebarLinks.forEach(l => {
+          if (l.getAttribute('data-tab') === targetId) l.classList.add('active');
+        });
+        // Activate matching mobile nav item
+        mobileNavItems.forEach(l => {
+          if (l.getAttribute('data-tab') === targetId) l.classList.add('active');
+        });
+
+        // Activate panel
+        const panel = document.getElementById(targetId);
+        if (panel) panel.classList.add('active');
+
+        // Update header title
+        if (headerTitle && tabTitles[targetId]) headerTitle.textContent = tabTitles[targetId];
+
+        // Show/hide FAB cart only on POS tab
+        const fabCart = document.getElementById('fab-cart-btn');
+        if (fabCart) fabCart.style.display = targetId === 'tab-pos' ? '' : 'none';
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closeSidebar();
+      }
+
+      sidebarLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          const targetId = link.getAttribute('data-tab');
-
-          // Deactivate all
-          tabLinks.forEach(l => l.classList.remove('active'));
-          tabPanels.forEach(p => p.classList.remove('active'));
-
-          // Activate target
-          link.classList.add('active');
-          const panel = document.getElementById(targetId);
-          if (panel) panel.classList.add('active');
-
-          // Close sidebar on mobile
-          closeSidebar();
+          switchTab(link.getAttribute('data-tab'));
         });
       });
 
+      mobileNavItems.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchTab(link.getAttribute('data-tab'));
+        });
+      });
+
+      // ── FAB Cart: scroll to cart panel on mobile ──
+      const fabCartBtn = document.getElementById('fab-cart-btn');
+      if (fabCartBtn) {
+        fabCartBtn.addEventListener('click', () => {
+          const cartPanel = document.querySelector('.pos-cart-panel');
+          if (cartPanel) {
+            cartPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      }
+
       // ── Modal overlay close ──
-      document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', () => {
-          overlay.closest('.modal').classList.remove('active');
+      document.querySelectorAll('.modal-overlay').forEach(overlayEl => {
+        overlayEl.addEventListener('click', () => {
+          overlayEl.closest('.modal').classList.remove('active');
         });
       });
       document.querySelectorAll('.close-modal-btn').forEach(btn => {
