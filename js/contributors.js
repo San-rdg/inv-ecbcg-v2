@@ -72,11 +72,11 @@ const Contributors = {
           const linkedCount = inventoryData.filter((i) => i.contributorId === c.id).length;
           return `
           <tr>
-            <td>${this._escapeHtml(c.name)}</td>
-            <td>${this._escapeHtml(c.contact || '—')}</td>
-            <td>${this._escapeHtml(c.details || '—')}</td>
-            <td>${linkedCount}</td>
-            <td>
+            <td data-label="Name">${this._escapeHtml(c.name)}</td>
+            <td data-label="Contact">${this._escapeHtml(c.contact || '-')}</td>
+            <td data-label="Details">${this._escapeHtml(c.details || '-')}</td>
+            <td data-label="Items">${linkedCount}</td>
+            <td data-label="Actions" class="row-actions">
               <button class="btn btn-sm btn-edit" onclick="Contributors.openEditModal('${c.id}')">Edit</button>
               <button class="btn btn-sm btn-delete" onclick="Contributors.delete('${c.id}')">Delete</button>
             </td>
