@@ -69,14 +69,14 @@ const Inventory = {
       .map(
         (item) => `
         <tr>
-          <td>${this._escapeHtml(item.name)}</td>
-          <td>${this._escapeHtml(item.contributorName || '—')}</td>
-          <td>${Utils.formatCurrency(item.price)}</td>
-          <td class="${item.quantity <= 0 ? 'text-danger' : item.quantity <= 5 ? 'text-warning' : ''}">
+          <td data-label="Name">${this._escapeHtml(item.name)}</td>
+          <td data-label="Contributor">${this._escapeHtml(item.contributorName || '-')}</td>
+          <td data-label="Price">${Utils.formatCurrency(item.price)}</td>
+          <td data-label="Quantity" class="${item.quantity <= 0 ? 'text-danger' : item.quantity <= 5 ? 'text-warning' : ''}">
             ${item.quantity}
           </td>
-          <td>${Utils.formatCurrency((item.price || 0) * (item.quantity || 0))}</td>
-          <td>
+          <td data-label="Value">${Utils.formatCurrency((item.price || 0) * (item.quantity || 0))}</td>
+          <td data-label="Actions" class="row-actions">
             <button class="btn btn-sm btn-edit" onclick="Inventory.openEditModal('${item.id}')">Edit</button>
             <button class="btn btn-sm btn-delete" onclick="Inventory.delete('${item.id}')">Delete</button>
           </td>
